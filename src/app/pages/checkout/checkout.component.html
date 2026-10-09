@@ -1,0 +1,144 @@
+<main class="checkout-container">
+  <div class="breadcrumb" *ngIf="!orderCompleted">
+    <a routerLink="/cart">← Back to Cart</a>
+  </div>
+
+  <!-- Normal Checkout Form State -->
+  <ng-container *ngIf="!orderCompleted; else successState">
+    <h1>Checkout & Payment 🔥</h1>
+
+    <div class="checkout-layout">
+      <!-- Shipping & Payment Form -->
+      <form class="checkout-form" (ngSubmit)="onSubmitOrder()" #checkoutForm="ngForm">
+        <!-- Shipping Details Section -->
+        <section class="form-section">
+          <h2>1. Shipping Address</h2>
+
+          <div class="form-group">
+            <label for="fullName">Full Name</label>
+            <input type="text" id="fullName" [(ngModel)]="formData.fullName" name="fullName" required placeholder="John Doe" />
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" [(ngModel)]="formData.email" name="email" required placeholder="survivor@scoville.com" />
+          </div>
+
+          <div class="form-group">
+            <label for="address">Street Address</label>
+            <input type="text" id="address" [(ngModel)]="formData.address" name="address" required placeholder="Infernal Highway 66" />
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="city">City</label>
+              <input type="text" id="city" [(ngModel)]="formData.city" name="city" required placeholder="Inferno City" />
+            </div>
+
+            <div class="form-group">
+              <label for="postalCode">Postal Code</label>
+              <input type="text" id="postalCode" [(ngModel)]="formData.postalCode" name="postalCode" required placeholder="66600" />
+            </div>
+          </div>
+        </section>
+
+        <!-- Payment Details Section -->
+            <section class="form-section">
+            <h2>2. Payment Information</h2>
+
+            <div class="form-group">
+                <label for="cardNumber">Card Number</label>
+                <input 
+                type="text" 
+                id="cardNumber" 
+                [(ngModel)]="formData.cardNumber" 
+                (input)="formatCardNumber($event)"
+                name="cardNumber" 
+                required 
+                placeholder="1234 5678 9012 3456" 
+                maxlength="19" 
+                />
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                <label for="cardExpiry">Expiry Date</label>
+                <input 
+                    type="text" 
+                    id="cardExpiry" 
+                    [(ngModel)]="formData.cardExpiry" 
+                    (input)="formatCardExpiry($event)"
+                    name="cardExpiry" 
+                    required 
+                    placeholder="MM/YY" 
+                    maxlength="5" 
+                />
+                </div>
+
+                <div class="form-group">
+                <label for="cardCvc">CVC / CVV</label>
+                <input 
+                    type="password" 
+                    id="cardCvc" 
+                    [(ngModel)]="formData.cardCvc" 
+                    name="cardCvc" 
+                    required 
+                    placeholder="666" 
+                    maxlength="4" 
+                />
+                </div>
+            </div>
+            </section>
+
+        <button type="submit" class="btn-pay" [disabled]="!checkoutForm.valid || isProcessing">
+          <span *ngIf="!isProcessing">Complete Order • ${{ (total$ | async)?.toFixed(2) }}</span>
+          <span *ngIf="isProcessing">Processing Payment... 🌶️</span>
+        </button>
+      </form>
+
+      <!-- Order Summary Card -->
+      <div class="checkout-summary">
+        <h2>Order Summary</h2>
+        <div class="items-preview">
+          <div *ngFor="let item of (cartItems$ | async)" class="summary-item">
+            <span class="item-name">{{ item.quantity }}x {{ item.product.name }}</span>
+            <span class="item-price">${{ (item.product.price * item.quantity).toFixed(2) }}</span>
+          </div>
+        </div>
+
+        <hr class="divider" />
+
+        <div class="summary-row">
+          <span>Subtotal</span>
+          <span>${{ (total$ | async)?.toFixed(2) }}</span>
+        </div>
+
+        <div class="summary-row">
+          <span>Shipping</span>
+          <span class="free-shipping">FREE</span>
+        </div>
+
+        <hr class="divider" />
+
+        <div class="summary-row total-row">
+          <span>Total</span>
+          <span>${{ (total$ | async)?.toFixed(2) }}</span>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+
+  <!-- Success Confirmation State -->
+  <ng-template #successState>
+    <div class="order-success-card">
+      <div class="flame-icon">🔥</div>
+      <h1>Order Confirmed!</h1>
+      <p class="order-number">Order ID: <strong>{{ orderId }}</strong></p>
+      <p class="success-message">
+        Thank you for your bravery! Your fiery products are being packed in heat-resistant containers and will ship shortly.
+      </p>
+
+      <a routerLink="/" class="btn-home">Return to Catalog</a>
+    </div>
+  </ng-template>
+</main>

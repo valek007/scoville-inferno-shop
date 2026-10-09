@@ -1,0 +1,87 @@
+<main class="product-detail-container">
+  <div class="breadcrumb">
+    <a routerLink="/">← Back to Catalog</a>
+  </div>
+
+  <ng-container *ngIf="product$ | async as product; else loadingOrNotFound">
+    <div class="product-detail-layout">
+      <!-- Product Image Section -->
+      <div class="image-gallery">
+        <div class="main-image-card">
+          <img [src]="product.imageUrl" [alt]="product.name" class="extended-image" />
+          <span class="category-badge">{{ product.category }}</span>
+        </div>
+      </div>
+
+      <!-- Product Info Section -->
+      <div class="product-info">
+        <h1 class="product-title">{{ product.name }}</h1>
+        <div class="product-price">${{ product.price.toFixed(2) }}</div>
+
+        <p class="short-description">{{ product.shortDescription }}</p>
+
+        <!-- Long Description -->
+        <div class="long-description-box">
+          <h3>Description</h3>
+          <p class="long-description">{{ product.longDescription }}</p>
+        </div>
+
+        <!-- Technical Specifications Table -->
+        <div class="specifications-box" *ngIf="product.specifications">
+          <h3>Technical Specifications</h3>
+          <ul class="specs-list">
+            <li *ngIf="product.specifications.origin">
+              <strong>Origin:</strong> {{ product.specifications.origin }}
+            </li>
+            <li>
+              <strong>Scoville Heat Units (SHU):</strong> 
+              <span class="shu-badge">{{ product.specifications.scovilleHeatUnits }}</span>
+            </li>
+            <li>
+              <strong>Flavor Profile:</strong> {{ product.specifications.flavorProfile }}
+            </li>
+            <li>
+              <strong>Recommended Uses:</strong> {{ product.specifications.recommendedUses }}
+            </li>
+            <li *ngIf="product.specifications.warning" class="warning-item">
+              <strong>⚠️ Warning:</strong> {{ product.specifications.warning }}
+            </li>
+          </ul>
+        </div>
+
+        <!-- Purchase & Quantity Actions -->
+        <div class="actions-area">
+          <div class="quantity-selector">
+            <label>Quantity:</label>
+            <div class="quantity-controls">
+              <button type="button" (click)="decrementQuantity()">-</button>
+              <input type="number" [(ngModel)]="quantity" min="1" readonly />
+              <button type="button" (click)="incrementQuantity()">+</button>
+            </div>
+          </div>
+
+          <div class="buttons-group">
+            <button class="btn-add-cart" (click)="onAddToCart(product)">
+              Add to Cart 🔥
+            </button>
+            <button class="btn-buy-now" (click)="onBuyNow(product)">
+              Buy Now 🛒
+            </button>
+          </div>
+
+          <!-- Added confirmation message -->
+          <div class="success-alert" *ngIf="addedToCartMessage">
+            ✓ {{ quantity }}x {{ product.name }} added to your cart!
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-template #loadingOrNotFound>
+    <div class="not-found-state">
+      <p>Loading or product not found... 🌶️</p>
+      <a routerLink="/" class="btn-back">Return to Catalog</a>
+    </div>
+  </ng-template>
+</main>

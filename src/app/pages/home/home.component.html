@@ -1,0 +1,31 @@
+<main class="home-container">
+  <!-- Hero Banner -->
+  <section class="hero-section">
+    <div class="hero-banner">
+      <img src="/images/banners/banner1.png" alt="The Scoville Inferno Banner" class="banner-image" />
+      <div class="hero-overlay">
+        <h1>Welcome to The Scoville Inferno 🔥</h1>
+        <p>Feel the true taste of Carolina Reaper and ghost pepper torment.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Product Catalog -->
+  <section class="catalog-section">
+    <h2>Our Fiery Catalog</h2>
+    
+    <!-- Async pipe handling asynchronous loading -->
+    <ng-container *ngIf="products$ | async as products; else loading">
+      <app-product-list 
+        [products]="products" 
+        (addToCart)="onAddToCart($event)">
+      </app-product-list>
+    </ng-container>
+
+    <ng-template #loading>
+      <div class="loading-spinner">
+        <p>Summoning infernal peppers... 🌶️</p>
+      </div>
+    </ng-template>
+  </section>
+</main>

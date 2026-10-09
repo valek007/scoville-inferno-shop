@@ -1,0 +1,56 @@
+<main class="cart-container">
+  <h1>Shopping Cart 🔥</h1>
+
+  <ng-container *ngIf="(cartItems$ | async) as items">
+    <div *ngIf="items.length > 0; else emptyCart" class="cart-layout">
+      <!-- Cart Items List -->
+      <div class="cart-items-list">
+        <div *ngFor="let item of items" class="cart-item-card">
+          <img [src]="item.product.imageUrl" [alt]="item.product.name" class="item-img" />
+          
+          <div class="item-details">
+            <h3>{{ item.product.name }}</h3>
+            <span class="item-price">${{ item.product.price.toFixed(2) }}</span>
+          </div>
+
+          <div class="item-quantity">
+            <button (click)="decrementQuantity(item)">-</button>
+            <span>{{ item.quantity }}</span>
+            <button (click)="incrementQuantity(item)">+</button>
+          </div>
+
+          <div class="item-subtotal">
+            ${{ (item.product.price * item.quantity).toFixed(2) }}
+          </div>
+        </div>
+      </div>
+
+      <!-- Order Summary -->
+      <div class="cart-summary">
+        <h2>Order Summary</h2>
+        <div class="summary-row">
+          <span>Subtotal</span>
+          <span>${{ (total$ | async)?.toFixed(2) }}</span>
+        </div>
+        <div class="summary-row">
+          <span>Shipping</span>
+          <span class="free-shipping">FREE</span>
+        </div>
+        <hr class="divider" />
+        <div class="summary-row total-row">
+          <span>Total</span>
+          <span>${{ (total$ | async)?.toFixed(2) }}</span>
+        </div>
+
+        <button class="btn-checkout" routerLink="/checkout">Proceed to Checkout 💳</button>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-template #emptyCart>
+    <div class="empty-cart-state">
+      <p>Your fiery shopping cart is empty 🌶️</p>
+      <a routerLink="/" class="btn-shop">Explore Hot Catalog</a>
+    </div>
+  </ng-template>
+</main>

@@ -1,0 +1,38 @@
+<header class="main-header">
+  <div class="header-container">
+    <!-- Brand Logo and Name -->
+    <a routerLink="/" class="brand-logo">
+      <img src="/images/icons/logo.png" alt="The Scoville Inferno Logo" class="logo-img" />
+      <span class="brand-name">The Scoville Inferno</span>
+    </a>
+
+    <!-- Navigation Links -->
+    <nav class="nav-menu">
+      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Products</a>
+      <a routerLink="/pain-guides" routerLinkActive="active">Pain Guides</a>
+      <a routerLink="/community" routerLinkActive="active">Community</a>
+      <a routerLink="/resources" routerLinkActive="active">Resources</a>
+      <a routerLink="/contact" routerLinkActive="active">Contact</a>
+    </nav>
+
+    <!-- User Action Area (Auth & Cart) -->
+    <div class="user-actions">
+      <!-- Guest Navigation (Sign In / Register) -->
+      <ng-container *ngIf="(isLoggedIn$ | async) === false">
+        <a routerLink="/account/login" class="auth-link">Sign In</a>
+        <a routerLink="/account/register" class="auth-btn">Register</a>
+      </ng-container>
+
+      <!-- Authenticated User Navigation -->
+      <ng-container *ngIf="isLoggedIn$ | async">
+        <a routerLink="/account" class="icon-link" title="My Account">
+          <span class="user-icon">👤</span>
+        </a>
+        <a routerLink="/cart" class="icon-link cart-link" title="Shopping Cart">
+          <img src="/images/icons/shopcart.png" alt="Cart Icon" class="cart-icon-img" />
+          <span class="cart-badge" *ngIf="(cartCount$ | async) as count">{{ count }}</span>
+        </a>
+      </ng-container>
+    </div>
+  </div>
+</header>
